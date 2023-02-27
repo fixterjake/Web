@@ -28,12 +28,12 @@ jobs:
         docker build -t zme-ui .
     - name: Tag images
       run: |
-        docker tag zme-api ghcr.io/memphis-artcc/zme-api:dev
-        docker tag zme-ui ghcr.io/memphis-artcc/zme-ui:dev
+        docker tag zme-api registry.digitalocean.com/memphis/zme-api:dev
+        docker tag zme-ui registry.digitalocean.com/memphis/zme-ui:dev
     - name: Push images
       run: |
-        docker push ghcr.io/memphis-artcc/zme-api:dev
-        docker push ghcr.io/memphis-artcc/zme-ui:dev
+        docker push registry.digitalocean.com/memphis/zme-api:dev
+        docker push registry.digitalocean.com/memphis/zme-ui:dev
     # - name: Restart api
     #   uses: actions-hub/kubectl@master
     #   env:
