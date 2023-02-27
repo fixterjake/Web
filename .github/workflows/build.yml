@@ -13,7 +13,7 @@ jobs:
     - name: Build api images
       run: |
         cd api
-        docker build -t zme-api -f zme.Core.API/Dockerfile .
+        docker build -t zme-api -f ZME.API/Dockerfile .
     - name: Build ui image
       run: |
         cd ui
