@@ -33,7 +33,7 @@ jobs:
     - name: Push images
       run: |
         docker push ghcr.io/memphis-artcc/zme-api:latest
-        docker push ghcr.io/memphis-artccs/zme-ui:latest
+        docker push ghcr.io/memphis-artcc/zme-ui:latest
     # - name: Restart api
     #   uses: actions-hub/kubectl@master
     #   env:
