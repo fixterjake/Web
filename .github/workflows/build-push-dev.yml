@@ -1,0 +1,50 @@
+name: Build & Push Dev
+on:
+  push:
+    branches:
+        - develop
+jobs:
+  DockerBuildPush:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Build api images
+      run: |
+        cd api
+        docker build -t zme-api -f zme.Core.API/Dockerfile .
+        docker build -t zme-jobs-roster -f zme.Core.Jobs.Roster/Dockerfile .
+    - name: Build ui image
+      run: |
+        cd ui
+        docker build -t zme-ui .
+    - name: Tag images
+      run: |
+        docker tag zme-api ghcr.io/fixterjake/zme-api:dev
+        docker tag zme-jobs-roster ghcr.io/fixterjake/zme-jobs-roster:dev
+        docker tag zme-ui ghcr.io/fixterjake/zme-ui:dev
+    - name: Push images
+      run: |
+        docker push ghcr.io/fixterjake/zme-api:dev
+        docker push ghcr.io/fixterjake/zme-jobs-roster:dev
+        docker push ghcr.io/fixterjake/zme-ui:dev
+    - name: Restart api
+      uses: actions-hub/kubectl@master
+      env:
+        KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+      with:
+        args: -n zme-dev rollout restart deployment api-dev
+    - name: Restart ui
+      uses: actions-hub/kubectl@master
+      env:
+        KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+      with:
+        args: -n zme-dev rollout restart deployment ui-dev

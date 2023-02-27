@@ -1,0 +1,19 @@
+name: Build
+on:
+  pull_request:
+    types: [opened, reopened]
+jobs:
+  DockerBuildPush:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+    - name: Build api images
+      run: |
+        cd api
+        docker build -t zme-api -f zme.Core.API/Dockerfile .
+        docker build -t zme-jobs-roster -f zme.Core.Jobs.Roster/Dockerfile .
+    - name: Build ui image
+      run: |
+        cd ui
+        docker build -t zme-ui .
