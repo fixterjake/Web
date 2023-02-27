@@ -14,7 +14,6 @@ jobs:
       run: |
         cd api
         docker build -t zme-api -f zme.Core.API/Dockerfile .
-        docker build -t zme-jobs-roster -f zme.Core.Jobs.Roster/Dockerfile .
     - name: Build ui image
       run: |
         cd ui
