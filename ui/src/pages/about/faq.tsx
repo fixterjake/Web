@@ -9,9 +9,10 @@ import { Fragment, useState } from "react";
 
 type FaqProps = {
     faqs?: Faq[];
+    apiUrl: string;
 }
 
-export default function FaqPage({ faqs }: FaqProps) {
+export default function FaqPage({ faqs, apiUrl }: FaqProps) {
 
     const router = useRouter();
     const [createOpen, setCreateOpen] = useState(false);
@@ -39,7 +40,7 @@ export default function FaqPage({ faqs }: FaqProps) {
         };
         const jsonData = JSON.stringify(faq);
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/faq`, {
+        const res = await fetch(`${apiUrl}/faq`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -73,7 +74,7 @@ export default function FaqPage({ faqs }: FaqProps) {
         };
         const jsonData = JSON.stringify(faq);
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/faq`, {
+        const res = await fetch(`${apiUrl}/faq`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -97,7 +98,7 @@ export default function FaqPage({ faqs }: FaqProps) {
     }
 
     async function handleDeleteSubmit() {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/faq?faqId=${selectedFaq?.id}`, {
+        const res = await fetch(`${apiUrl}/faq?faqId=${selectedFaq?.id}`, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${getToken()}`
@@ -313,11 +314,13 @@ export default function FaqPage({ faqs }: FaqProps) {
 }
 
 export async function getServerSideProps() {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/faq/all`);
+    const apiUrl = process.env.API_URL;
+    const res = await fetch(`${apiUrl}/faq/all`);
     const response = await res.json();
     return {
         props: {
             faqs: response.data,
+            apiUrl: apiUrl,
         }
     };
 }
