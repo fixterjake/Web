@@ -1,8 +1,9 @@
 import { useEffect } from "react";
+import { redirect } from "next/navigation";
 
 export default function LoginPage() {
     useEffect(() => {
-        window.location.replace(`${process.env.NEXT_PUBLIC_API_URL}/auth/login/redirect`);
+        redirect(`${process.env.NEXT_PUBLIC_API_URL}/auth/login/redirect`);
     });
 
     return (
