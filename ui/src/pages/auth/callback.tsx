@@ -25,7 +25,7 @@ export default function AuthCallback({ accessToken }: AuthCallbackProps) {
 }
 
 export async function getServerSideProps(ctx: NextPageContext) {
-    const res = await sendCodeCallback(ctx.query.code as string);
+    const res = await sendCodeCallback(process.env.API_URL || "", ctx.query.code as string);
     if (!res.ok) return {props: {}};
     const data = await res.json();
     return {
