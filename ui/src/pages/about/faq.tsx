@@ -170,10 +170,12 @@ export default function FaqPage({ faqs }: FaqProps) {
                         </div>
                     )}
                     {isLoggedIn && isFullStaff(user) ? (
-                        <button onClick={openCreateModal} className="flex justify-center w-[15rem] ml-auto mr-auto px-4 py-2 text-lg
-                            font-medium rounded-lg text-zinc-100 bg-zinc-600 hover:bg-zinc-500">
-                            Create new FAQ entry
-                        </button>
+                        <div className="pt-4">
+                            <button onClick={openCreateModal} className="flex justify-center w-[15rem] ml-auto mr-auto px-4 py-2 text-lg
+                                font-medium rounded-lg text-zinc-100 bg-zinc-600 hover:bg-zinc-500">
+                                Create new FAQ entry
+                            </button>
+                        </div>
                     ) : (<></>)}
                 </div>
             </Card>
