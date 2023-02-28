@@ -92,6 +92,6 @@ public class RedisService
 
     public async Task SetCached(string key, string data)
     {
-        await _redis.StringSetAsync(key, data);
+        await _redis.StringSetAsync(key, data, TimeSpan.FromMinutes(5));
     }
 }
