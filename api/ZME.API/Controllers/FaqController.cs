@@ -2,6 +2,7 @@
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Sentry;
 using ZME.API.Extensions;
 using ZME.API.Repositories;
@@ -108,6 +109,17 @@ public class FaqController : ControllerBase
     {
         try
         {
+            var cached = await _redisService.GetCached("faqs");
+            if (cached != null)
+            {
+                var cachedResult = JsonConvert.DeserializeObject<IList<Faq>>(cached);
+                return Ok(new Response<IList<Faq>>
+                {
+                    StatusCode = 200,
+                    Message = $"Got {cachedResult?.Count} faqs",
+                    Data = cachedResult
+                });
+            }
             var result = await _faqRepository.GetFaqs();
             return Ok(new Response<IList<Faq>>
             {

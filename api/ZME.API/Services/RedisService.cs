@@ -84,4 +84,14 @@ public class RedisService
             roles.Add("CanRequestTraining");
         await SetRoles(roles, dbUser.Id);
     }
+
+    public async Task<string?> GetCached(string key)
+    {
+        return await _redis.StringGetAsync(key);
+    }
+
+    public async Task SetCached(string key, string data)
+    {
+        await _redis.StringSetAsync(key, data);
+    }
 }
