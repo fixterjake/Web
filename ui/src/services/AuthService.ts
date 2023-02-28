@@ -75,7 +75,7 @@ export function getUser(): AuthUser | null {
         rating: parsed.rating || "",
         ratingInt: parsed.ratingInt || 0,
         division: parsed.division || "",
-        roles: parsed.roles?.sort() || []
+        roles: parsed.roles || []
     };
 }
 
