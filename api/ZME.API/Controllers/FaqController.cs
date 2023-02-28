@@ -121,6 +121,7 @@ public class FaqController : ControllerBase
                 });
             }
             var result = await _faqRepository.GetFaqs();
+            await _redisService.SetCached("faqs", JsonConvert.SerializeObject(result));
             return Ok(new Response<IList<Faq>>
             {
                 StatusCode = 200,
