@@ -7,15 +7,6 @@ const nextConfig = {
     output: "standalone",
     sassOptions: {
         includePaths: [path.join(__dirname, "styles")],
-    },
-    async redirects() {
-        return [
-            {
-                source: "/login",
-                destination: `${process.env.NEXT_PUBLIC_API_URL}/auth/login/redirect`,
-                permanent: true,
-            }
-        ];
     }
 };
 

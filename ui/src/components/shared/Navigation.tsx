@@ -19,7 +19,7 @@ const Navigation = () => {
 
     function loginHandler() {
         setRedirect(router.asPath);
-        router.push("/login");
+        router.push("/auth/login");
     }
 
     function logoutHandler() {
