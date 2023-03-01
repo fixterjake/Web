@@ -58,6 +58,7 @@ public class FaqController : ControllerBase
             }
 
             var result = await _faqRepository.CreateFaq(data, Request);
+            await _redisService.RemoveCached("faqs");
             return StatusCode(201, new Response<Faq>
             {
                 StatusCode = 201,
@@ -162,6 +163,7 @@ public class FaqController : ControllerBase
             }
 
             var result = await _faqRepository.UpdateFaq(data, Request);
+            await _redisService.RemoveCached("faqs");
             return StatusCode(200, new Response<Faq>
             {
                 StatusCode = 200,
@@ -198,7 +200,7 @@ public class FaqController : ControllerBase
                 return StatusCode(401);
 
             await _faqRepository.DeleteFaq(faqId, Request);
-
+            await _redisService.RemoveCached("faqs");
             return Ok(new Response<string?>
             {
                 StatusCode = 200,

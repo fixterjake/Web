@@ -94,4 +94,9 @@ public class RedisService
     {
         await _redis.StringSetAsync(key, data, TimeSpan.FromMinutes(5));
     }
+
+    public async Task RemoveCached(string key)
+    {
+        await _redis.StringGetDeleteAsync(key);
+    }
 }
