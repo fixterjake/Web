@@ -11,7 +11,6 @@ export async function sendCodeCallback(apiUrl: string, code: string): Promise<Re
 }
 
 export async function sendLogout(apiUrl: string): Promise<void> {
-    console.log("sending logout");
     await fetch(`${apiUrl}/Auth/logout`, {
         method: "POST",
         headers: {
@@ -108,4 +107,16 @@ export function isSeniorTrainingStaff(user: AuthUser | null): boolean {
     if (!user)
         return false;
     return user.roles?.some(r => ["ATM", "DATM", "TA", "ATA", "WM", "INS"].includes(r));
+}
+
+export function hasRole(user: AuthUser | null, role: string): boolean {
+    if (!user)
+        return false;
+    return user.roles?.some(r => r === role);
+}
+
+export function canAirports(user: AuthUser | null): boolean {
+    if (!user)
+        return false;
+    return user.roles?.some(r => ["ATM", "DATM", "TA", "WM", "FE", "AFE"].includes(r));
 }

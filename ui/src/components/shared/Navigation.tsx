@@ -29,7 +29,7 @@ const Navigation = () => {
 
     return (
         <nav className="py-6 text-white bg-zinc-700">
-            <div className="mx-[10%] flex justify-between items-center">
+            <div className="mx-[15%] flex justify-between items-center">
                 <div className="flex items-center">
                     <Link href="/" className="mr-4">
                         <Image src={logo} width={125} alt="Memphis ARTCC" priority={true} className="pb-4 brightness-0 invert" />
@@ -258,7 +258,7 @@ const Navigation = () => {
                                                 <Link href="/user/profile" className="block p-2 mb-1 rounded-md hover:bg-zinc-400">Profile</Link>
                                             </Menu.Item>
                                             <Menu.Item>
-                                                <button onClick={logoutHandler} className="block p-2 rounded-md hover:bg-zinc-400">Logout</button>
+                                                <button onClick={logoutHandler} className="block w-full p-2 text-left rounded-md hover:bg-zinc-400">Logout</button>
                                             </Menu.Item>
                                         </div>
                                     </Menu.Items>

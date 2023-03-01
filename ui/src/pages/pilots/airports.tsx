@@ -1,24 +1,24 @@
 import Card from "@/components/Card";
 import { useAuthContext } from "@/contexts/AuthContext";
-import { Faq } from "@/models/Faq";
-import { getToken, isFullStaff } from "@/services/AuthService";
-import { Dialog, Disclosure, Transition } from "@headlessui/react";
+import { Airport } from "@/models/Airport";
+import { canAirports, getToken, isFullStaff } from "@/services/AuthService";
+import { Dialog, Transition } from "@headlessui/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { Fragment, useState } from "react";
 
-type FaqProps = {
-    faqs?: Faq[];
+type AirportsProps = {
+    airports: Airport[];
     apiUrl: string;
 }
 
-export default function FaqPage({ faqs, apiUrl }: FaqProps) {
+export default function AirportsPage({ airports, apiUrl }: AirportsProps) {
 
     const router = useRouter();
     const [createOpen, setCreateOpen] = useState(false);
     const [editOpen, setEditOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
-    const [selectedFaq, setSelectedFaq] = useState<Faq>();
+    const [selectedAirport, setSelectedAirport] = useState<Airport>();
     const [isLoggedIn, , user] = useAuthContext();
 
     function openCreateModal() {
@@ -33,14 +33,15 @@ export default function FaqPage({ faqs, apiUrl }: FaqProps) {
     async function handleCreateSubmit(event: React.FormEvent) {
         event.preventDefault();
 
-        const faq: Faq = {
-            question: (event.target as HTMLFormElement).question.value,
-            answer: (event.target as HTMLFormElement).answer.value,
-            order: (event.target as HTMLFormElement).order.value
+        const airport: Airport = {
+            name: (event.target as HTMLFormElement).airport.value,
+            icao: (event.target as HTMLFormElement).icao.value,
+            departures: 0,
+            arrivals: 0
         };
-        const jsonData = JSON.stringify(faq);
+        const jsonData = JSON.stringify(airport);
 
-        const res = await fetch(`${apiUrl}/faq`, {
+        const res = await fetch(`${apiUrl}/airports`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -66,15 +67,15 @@ export default function FaqPage({ faqs, apiUrl }: FaqProps) {
     async function handleEditSubmit(event: React.FormEvent) {
         event.preventDefault();
 
-        const faq: Faq = {
-            id: selectedFaq?.id,
-            question: (event.target as HTMLFormElement).question.value,
-            answer: (event.target as HTMLFormElement).answer.value,
-            order: (event.target as HTMLFormElement).order.value
+        const airport: Airport = {
+            name: (event.target as HTMLFormElement).airport.value,
+            icao: (event.target as HTMLFormElement).icao.value,
+            departures: selectedAirport?.departures ?? 0,
+            arrivals: selectedAirport?.arrivals ?? 0
         };
-        const jsonData = JSON.stringify(faq);
+        const jsonData = JSON.stringify(airport);
 
-        const res = await fetch(`${apiUrl}/faq`, {
+        const res = await fetch(`${apiUrl}/airports`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -98,7 +99,7 @@ export default function FaqPage({ faqs, apiUrl }: FaqProps) {
     }
 
     async function handleDeleteSubmit() {
-        const res = await fetch(`${apiUrl}/faq?faqId=${selectedFaq?.id}`, {
+        const res = await fetch(`${apiUrl}/airports?airportId=${selectedAirport?.id}`, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${getToken()}`
@@ -113,68 +114,61 @@ export default function FaqPage({ faqs, apiUrl }: FaqProps) {
     return (
         <>
             <Head>
-                <title>FAQ | Memphis ARTCC</title>
-                <meta name="description" content="FAQ :: ARTCC" />
+                <title>Airports | Memphis ARTCC</title>
+                <meta name="description" content="Airports | Memphis ARTCC" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Card title="Frequently Asked Questions" className="mt-10">
+            <Card title="Airports" className="mt-10">
                 <div className="flex flex-col space-y-4 text-center mx-[15%]">
-                    {faqs !== undefined && faqs.length > 0 ? (
+                    {airports != null && airports.length > 0 ? (
                         <>
-                            {faqs?.sort(x => x.order)?.map((faq) => (
-                                <div key={faq.id} className="flex flex-col space-y-2">
-                                    <Disclosure>
-                                        {({ open }) => (
-                                            <>
-                                                <Disclosure.Button className="flex justify-between w-full px-4 py-2 text-lg font-medium rounded-lg text-zinc-100 bg-zinc-600 hover:bg-zinc-500">
-                                                    <span>{faq.question}</span>
-                                                    <svg
-                                                        className={`${
-                                                            open ? "transform rotate-180" : ""
-                                                        } w-5 h-5 text-zinc-200`}
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        viewBox="0 0 20 20"
-                                                        fill="currentColor"
-                                                        aria-hidden="true"
-                                                    >
-                                                        <path
-                                                            fillRule="evenodd"
-                                                            d="M6 6L14 10L6 14V6Z"
-                                                            clipRule="evenodd"
-                                                        />
-                                                    </svg>
-                                                </Disclosure.Button>
-                                                <Disclosure.Panel className="px-4 pt-4 pb-2 text-lg text-zinc-100">
-                                                    {faq.answer}
-                                                    <br />
-                                                    {isLoggedIn && isFullStaff(user) ? (
-                                                        <div className="mt-4 ml-auto mr-auto w-[15rem]">
-                                                            <button onClick={() => {openEditModal(); setSelectedFaq(faq);}} className="p-2 mx-2 rounded-md bg-zinc-600 hover:bg-zinc-500">
-                                                                Edit
-                                                            </button>
-                                                            <button onClick={() => {openDeleteModel(); setSelectedFaq(faq);}} className="p-2 mx-2 rounded-md bg-zinc-600 hover:bg-zinc-500">
-                                                                Delete
-                                                            </button>
-                                                        </div>
-                                                    ) : (<></>)}
-                                                </Disclosure.Panel>
-                                            </>
-                                        )}
-                                    </Disclosure>
-                                </div>
-                            ))}
+                            <table className="table-auto">
+                                <thead className="border-b border-gray-400">
+                                    <th>Name</th>
+                                    <th>ICAO</th>
+                                    <th>Arrivals</th>
+                                    <th>Departures</th>
+                                    {canAirports(user) ? (
+                                        <th>Actions</th>
+                                    ) : (<></>)}
+                                </thead>
+                                <tbody>
+                                    {airports?.map((airport) => (
+                                        <tr key={airport.id} className="border-b border-gray-400">
+                                            <td>
+                                                <a href={`https://chartfox.org/${airport.icao}`} target="_blank">
+                                                    {airport.name}
+                                                </a>
+                                            </td>
+                                            <td>{airport.icao}</td>
+                                            <td>{airport.arrivals}</td>
+                                            <td>{airport.departures}</td>
+                                            {canAirports(user) ? (
+                                                <td>
+                                                    <button onClick={() => {openEditModal(); setSelectedAirport(airport);}} className="p-2 mx-2 mt-2 rounded-md bg-zinc-600 hover:bg-zinc-500">
+                                                        Edit
+                                                    </button>
+                                                    <button onClick={() => {openDeleteModel(); setSelectedAirport(airport);}} className="p-2 mx-2 rounded-md bg-zinc-600 hover:bg-zinc-500">
+                                                        Delete
+                                                    </button>
+                                                </td>
+                                            ) : (<></>)}
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
                         </>
                     ) : (
                         <div className="flex flex-col space-y-2">
-                            <h1 className="text-xl font-medium">No FAQs found</h1>
+                            <h1 className="text-xl font-medium">No airports found</h1>
                         </div>
                     )}
                     {isLoggedIn && isFullStaff(user) ? (
                         <div className="pt-4">
                             <button onClick={openCreateModal} className="flex justify-center w-[15rem] ml-auto mr-auto px-4 py-2 text-lg
                                 font-medium rounded-lg text-zinc-100 bg-zinc-600 hover:bg-zinc-500">
-                                Create new FAQ entry
+                                Create new Airport
                             </button>
                         </div>
                     ) : (<></>)}
@@ -206,16 +200,14 @@ export default function FaqPage({ faqs, apiUrl }: FaqProps) {
                             >
                                 <Dialog.Panel className="w-full max-w-md p-6 overflow-hidden text-left align-middle transition-all transform shadow-xl bg-zinc-700 rounded-2xl">
                                     <Dialog.Title as="h2" className="pb-4 mb-4 text-lg font-medium leading-6 text-center text-white border-b-2">
-                                        Create new FAQ entry
+                                        Create new Airport
                                     </Dialog.Title>
                                     <form onSubmit={handleCreateSubmit}>
                                         <div className="flex flex-col">
-                                            <label htmlFor="question" className="mb-4 text-lg font-medium">Question</label>
-                                            <textarea id="question" name="question" className="mb-4 text-gray-800 rounded-md" required />
-                                            <label htmlFor="answer" className="mb-4 text-lg font-medium">Answer</label>
-                                            <textarea id="answer" name="answer" className="mb-4 text-gray-800 rounded-md" required />
-                                            <label htmlFor="order" className="mb-4 text-lg font-medium text-center">Order</label>
-                                            <input type="number" id="order" name="order" className="text-gray-800 rounded-md w-[5rem] ml-auto mr-auto" required />
+                                            <label htmlFor="airport" className="mb-4 text-lg font-medium">Name</label>
+                                            <input type="text" id="airport" name="question" className="mb-4 text-gray-800 rounded-md" required />
+                                            <label htmlFor="icao" className="mb-4 text-lg font-medium">ICAO</label>
+                                            <input type="text" id="icao" name="answer" className="mb-4 text-gray-800 rounded-md" required />
                                             <button type="submit" className="ml-auto p-2 w-[4rem] mt-4 rounded-md bg-zinc-600 hover:bg-zinc-500">Submit</button>
                                         </div>
                                     </form>
@@ -251,16 +243,14 @@ export default function FaqPage({ faqs, apiUrl }: FaqProps) {
                             >
                                 <Dialog.Panel className="w-full max-w-md p-6 overflow-hidden text-left align-middle transition-all transform shadow-xl bg-zinc-700 rounded-2xl">
                                     <Dialog.Title as="h2" className="pb-4 mb-4 text-lg font-medium leading-6 text-center text-white border-b-2">
-                                        Edit FAQ entry
+                                        Edit Airport
                                     </Dialog.Title>
                                     <form onSubmit={handleEditSubmit}>
                                         <div className="flex flex-col">
-                                            <label htmlFor="question" className="mb-4 text-lg font-medium">Question</label>
-                                            <textarea id="question" name="question" className="mb-4 text-gray-800 rounded-md" defaultValue={selectedFaq?.question} required />
-                                            <label htmlFor="answer" className="mb-4 text-lg font-medium">Answer</label>
-                                            <textarea id="answer" name="answer" className="mb-4 text-gray-800 rounded-md" defaultValue={selectedFaq?.answer} required />
-                                            <label htmlFor="order" className="mb-4 text-lg font-medium text-center">Order</label>
-                                            <input type="number" id="order" name="order" className="text-gray-800 rounded-md w-[5rem] ml-auto mr-auto" defaultValue={selectedFaq?.order} required />
+                                            <label htmlFor="airport" className="mb-4 text-lg font-medium">Name</label>
+                                            <input type="text" id="airport" name="question" className="mb-4 text-gray-800 rounded-md" defaultValue={selectedAirport?.name} required />
+                                            <label htmlFor="icao" className="mb-4 text-lg font-medium">ICAO</label>
+                                            <input type="text" id="icao" name="answer" className="mb-4 text-gray-800 rounded-md" defaultValue={selectedAirport?.icao} required />
                                             <button type="submit" className="ml-auto p-2 w-[4rem] mt-4 rounded-md bg-zinc-600 hover:bg-zinc-500">Submit</button>
                                         </div>
                                     </form>
@@ -296,7 +286,7 @@ export default function FaqPage({ faqs, apiUrl }: FaqProps) {
                             >
                                 <Dialog.Panel className="w-full max-w-md p-6 overflow-hidden text-left align-middle transition-all transform shadow-xl bg-zinc-700 rounded-2xl">
                                     <Dialog.Title as="h2" className="pb-4 mb-4 text-lg font-medium leading-6 text-center text-white">
-                                        Delete FAQ Entry
+                                        Delete Airport
                                     </Dialog.Title>
                                     <div className="w-full text-right">
                                         <div className="text-lg font-medium text-center">This action cannot be undone.</div>
@@ -315,11 +305,11 @@ export default function FaqPage({ faqs, apiUrl }: FaqProps) {
 
 export async function getServerSideProps() {
     const apiUrl = process.env.API_URL;
-    const res = await fetch(`${apiUrl}/faq/all`);
+    const res = await fetch(`${apiUrl}/airports/all`);
     const response = await res.json();
     return {
         props: {
-            faqs: response.data,
+            airports: response.data,
             apiUrl: apiUrl,
         }
     };

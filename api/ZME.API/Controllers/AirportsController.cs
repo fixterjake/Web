@@ -2,6 +2,7 @@
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Sentry;
 using ZME.API.Extensions;
 using ZME.API.Repositories;
@@ -57,6 +58,7 @@ public class AirportsController : ControllerBase
             }
 
             var result = await _airportRepository.CreateAirport(data, Request);
+            await _redisService.RemoveCached("airports");
             return StatusCode(201, new Response<Airport>
             {
                 StatusCode = 201,
@@ -107,7 +109,19 @@ public class AirportsController : ControllerBase
     {
         try
         {
+            var cached = await _redisService.GetCached("airports");
+            if (cached != null)
+            {
+                var cachedResult = JsonConvert.DeserializeObject<IList<Airport>>(cached);
+                return Ok(new Response<IList<Airport>>
+                {
+                    StatusCode = 200,
+                    Message = $"Got {cachedResult?.Count} airports",
+                    Data = cachedResult
+                });
+            }
             var result = await _airportRepository.GetAirports();
+            await _redisService.SetCached("airports", JsonConvert.SerializeObject(result));
             return Ok(new Response<IList<Airport>>
             {
                 StatusCode = 200,
@@ -148,6 +162,7 @@ public class AirportsController : ControllerBase
             }
 
             var result = await _airportRepository.UpdateAirport(data, Request);
+            await _redisService.RemoveCached("airports");
             return Ok(new Response<Airport>
             {
                 StatusCode = 200,
@@ -182,7 +197,9 @@ public class AirportsController : ControllerBase
         {
             if (!await _redisService.ValidateRoles(Request.HttpContext.User, Constants.CAN_AIRPORTS_LIST))
                 return StatusCode(401);
+
             await _airportRepository.DeleteAirport(airportId, Request);
+            await _redisService.RemoveCached("airports");
             return Ok(new Response<string?>
             {
                 StatusCode = 200,
