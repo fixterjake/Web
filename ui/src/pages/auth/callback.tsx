@@ -21,7 +21,7 @@ export default function AuthCallback({ accessToken }: AuthCallbackProps) {
             router.push(getRedirect() || "/");
             deleteRedirect();
         }
-    }, [accessToken, router]);
+    }, [accessToken, setLoggedIn, router]);
 
     return (
         <h1>Loading...</h1>
