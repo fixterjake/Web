@@ -14,11 +14,8 @@ export default function AuthLogout({ apiUrl }: LogoutProps) {
     const router = useRouter();
 
     useEffect(() => {
-        console.log("logout");
-        console.log(`loggedIn: ${loggedIn}`);
         if (loggedIn)
             sendLogout(apiUrl).then(() => {
-                console.log("sent logout request");
                 setLoggedIn(false);
                 deleteToken();
                 router.push(getRedirect() || "/");

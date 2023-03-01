@@ -258,7 +258,7 @@ const Navigation = () => {
                                                 <Link href="/user/profile" className="block p-2 mb-1 rounded-md hover:bg-zinc-400">Profile</Link>
                                             </Menu.Item>
                                             <Menu.Item>
-                                                <a href="" onClick={logoutHandler} className="block p-2 rounded-md hover:bg-zinc-400">Logout</a>
+                                                <button onClick={logoutHandler} className="block p-2 rounded-md hover:bg-zinc-400">Logout</button>
                                             </Menu.Item>
                                         </div>
                                     </Menu.Items>
