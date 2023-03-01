@@ -1,3 +1,4 @@
+import { useAuthContext } from "@/contexts/AuthContext";
 import { deleteRedirect, getRedirect, sendCodeCallback, setToken } from "@/services/AuthService";
 import { NextPageContext } from "next";
 import { useRouter } from "next/router";
@@ -11,9 +12,12 @@ export default function AuthCallback({ accessToken }: AuthCallbackProps) {
 
     const router = useRouter();
 
+    const [ , setLoggedIn, ] = useAuthContext();
+
     useEffect(() => {
         if (accessToken) {
             setToken(accessToken);
+            setLoggedIn(true);
             router.push(getRedirect() || "/");
             deleteRedirect();
         }
