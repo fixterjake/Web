@@ -1,12 +1,23 @@
 import { useEffect } from "react";
-import { redirect } from "next/navigation";
 
-export default function LoginPage() {
+type LoginProps = {
+    apiUrl: string;
+}
+
+export default function LoginPage({ apiUrl }: LoginProps) {
     useEffect(() => {
-        redirect(`${process.env.NEXT_PUBLIC_API_URL}/auth/login/redirect`);
+        window.location.href = `${apiUrl}/auth/login/redirect`;
     });
 
     return (
         <h1>Loading...</h1>
     );
+}
+
+export function getServerSideProps() {
+    return {
+        props: {
+            apiUrl: process.env.API_URL
+        }
+    };
 }

@@ -3,7 +3,11 @@ import { deleteRedirect, deleteToken, getRedirect, sendLogout } from "@/services
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
-export default function AuthLogout() {
+type LogoutProps = {
+    apiUrl: string;
+}
+
+export default function AuthLogout({ apiUrl }: LogoutProps) {
 
     const [loggedIn, setLoggedIn] = useAuthContext();
 
@@ -11,15 +15,24 @@ export default function AuthLogout() {
 
     useEffect(() => {
         if (loggedIn)
-            sendLogout().then(() => {
+            sendLogout(apiUrl).then(() => {
+                console.log("sent logout request");
                 setLoggedIn(false);
                 deleteToken();
                 router.push(getRedirect() || "/");
                 deleteRedirect();
             });
-    }, [loggedIn, setLoggedIn, router]);
+    }, [apiUrl, loggedIn, setLoggedIn, router]);
 
     return (
         <h1>Loading...</h1>
     );
+}
+
+export function getServerSideProps() {
+    return {
+        props: {
+            apiUrl: process.env.API_URL
+        }
+    };
 }

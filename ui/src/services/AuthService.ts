@@ -1,7 +1,7 @@
 import { ApiToken, AuthUser } from "@/models/Auth";
 
-export async function sendCodeCallback(code: string): Promise<Response> {
-    return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/Auth/login/callback`, {
+export async function sendCodeCallback(apiUrl: string, code: string): Promise<Response> {
+    return await fetch(`${apiUrl}/Auth/login/callback`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -10,8 +10,9 @@ export async function sendCodeCallback(code: string): Promise<Response> {
     });
 }
 
-export async function sendLogout(): Promise<void> {
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/Auth/logout`, {
+export async function sendLogout(apiUrl: string): Promise<void> {
+    console.log("sending logout");
+    await fetch(`${apiUrl}/Auth/logout`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
