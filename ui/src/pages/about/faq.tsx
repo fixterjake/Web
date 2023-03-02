@@ -322,7 +322,7 @@ export default function FaqPage({ faqs, apiUrl }: FaqProps) {
                                 leaveTo="opacity-0 scale-95"
                             >
                                 <Dialog.Panel className="w-full max-w-md p-6 overflow-hidden text-left align-middle transition-all transform shadow-xl bg-zinc-700 rounded-2xl">
-                                    <Dialog.Title as="h2" className="pb-4 mb-4 text-lg font-medium leading-6 text-center text-white">
+                                    <Dialog.Title as="h2" className="pb-4 mb-4 text-lg font-medium leading-6 text-center text-white border-b-2">
                                         Delete FAQ Entry
                                     </Dialog.Title>
                                     <div className="w-full text-right">

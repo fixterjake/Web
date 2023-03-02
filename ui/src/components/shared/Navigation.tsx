@@ -100,7 +100,7 @@ const Navigation = () => {
                     <div>
                         <Menu>
                             <Menu.Button className="mx-4 text-xl font-bold text-white">
-                                    Controllers
+                                Controllers
                             </Menu.Button>
                             <Transition
                                 as={Fragment}

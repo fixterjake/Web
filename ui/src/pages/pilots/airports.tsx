@@ -140,11 +140,11 @@ export default function AirportsPage({ airports, apiUrl }: AirportsProps) {
                                         <th>Actions</th>
                                     ) : (<></>)}
                                 </thead>
-                                <tbody>
+                                <tbody className="text-lg">
                                     {airports?.map((airport) => (
                                         <tr key={airport.id} className="border-b border-gray-400">
                                             <td>
-                                                <a href={`https://chartfox.org/${airport.icao}`} target="_blank">
+                                                <a href={`https://chartfox.org/${airport.icao}`} target="_blank" className="font-medium">
                                                     {airport.name}
                                                 </a>
                                             </td>
@@ -153,7 +153,7 @@ export default function AirportsPage({ airports, apiUrl }: AirportsProps) {
                                             <td>{airport.departures}</td>
                                             {canAirports(user) ? (
                                                 <td>
-                                                    <button onClick={() => {openEditModal(); setSelectedAirport(airport);}} className="p-2 mx-2 mt-2 rounded-md bg-zinc-600 hover:bg-zinc-500">
+                                                    <button onClick={() => {openEditModal(); setSelectedAirport(airport);}} className="p-2 mx-2 my-2 rounded-md bg-zinc-600 hover:bg-zinc-500">
                                                         Edit
                                                     </button>
                                                     <button onClick={() => {openDeleteModel(); setSelectedAirport(airport);}} className="p-2 mx-2 rounded-md bg-zinc-600 hover:bg-zinc-500">
@@ -312,7 +312,7 @@ export default function AirportsPage({ airports, apiUrl }: AirportsProps) {
                                 leaveTo="opacity-0 scale-95"
                             >
                                 <Dialog.Panel className="w-full max-w-md p-6 overflow-hidden text-left align-middle transition-all transform shadow-xl bg-zinc-700 rounded-2xl">
-                                    <Dialog.Title as="h2" className="pb-4 mb-4 text-lg font-medium leading-6 text-center text-white">
+                                    <Dialog.Title as="h2" className="pb-4 mb-4 text-lg font-medium leading-6 text-center text-white border-b-2">
                                         Delete Airport
                                     </Dialog.Title>
                                     <div className="w-full text-right">

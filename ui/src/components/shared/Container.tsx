@@ -5,7 +5,7 @@ type ContainerProps = {
 
 const Container = ({children}: ContainerProps) => {
     return (
-        <div className="mx-[15%]">
+        <div className="mx-[15%] flex-grow">
             {children}
         </div>
     );
