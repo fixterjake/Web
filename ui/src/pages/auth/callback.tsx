@@ -1,5 +1,5 @@
 import { useAuthContext } from "@/contexts/AuthContext";
-import { deleteRedirect, getRedirect, sendCodeCallback, setToken } from "@/services/AuthService";
+import { deleteRedirect, getRedirect, sendCodeCallback, setToken } from "@/Helpers/AuthHelper";
 import { NextPageContext } from "next";
 import { useRouter } from "next/router";
 import { useEffect } from "react";

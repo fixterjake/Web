@@ -1,5 +1,5 @@
 import { useAuthContext } from "@/contexts/AuthContext";
-import { getToken, isFullStaff, isSeniorStaff, isSeniorTrainingStaff, isStaff, isTrainingStaff, setRedirect } from "@/services/AuthService";
+import { getToken, isFullStaff, isSeniorStaff, isSeniorTrainingStaff, isStaff, isTrainingStaff, setRedirect } from "@/Helpers/AuthHelper";
 import { Menu, Transition } from "@headlessui/react";
 import Image from "next/image";
 import Link from "next/link";

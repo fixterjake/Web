@@ -7,7 +7,10 @@ const nextConfig = {
     output: "standalone",
     sassOptions: {
         includePaths: [path.join(__dirname, "styles")],
-    }
+    },
+    images: {
+        domains: ["www.vzdc.org"],
+    },
 };
 
 module.exports = nextConfig;

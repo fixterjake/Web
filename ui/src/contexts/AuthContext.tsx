@@ -1,5 +1,5 @@
 import { AuthUser } from "@/models/Auth";
-import { getUser } from "@/services/AuthService";
+import { getUser } from "@/Helpers/AuthHelper";
 import { createContext, useContext, useEffect, useState } from "react";
 
 type AuthContextProps = {

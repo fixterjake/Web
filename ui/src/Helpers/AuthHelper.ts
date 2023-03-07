@@ -120,3 +120,9 @@ export function canAirports(user: AuthUser | null): boolean {
         return false;
     return user.roles?.some(r => ["ATM", "DATM", "TA", "WM", "FE", "AFE"].includes(r));
 }
+
+export function canEvents(user: AuthUser | null): boolean {
+    if (!user)
+        return false;
+    return user.roles?.some(r => ["ATM", "DATM", "TA", "WM", "EC", "AEC"].includes(r));
+}
