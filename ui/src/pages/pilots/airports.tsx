@@ -179,7 +179,7 @@ export default function AirportsPage({ apiUrl }: AirportsProps) {
                                     <td>{airport.icao}</td>
                                     <td>{airport.arrivals}</td>
                                     <td>{airport.departures}</td>
-                                    {canAirports(user) ? (
+                                    {isLoggedIn && canAirports(user) ? (
                                         <td>
                                             <button onClick={() => {openEditDialog(); setSelectedAirport(airport);}} className="p-2 mx-2 my-2 rounded-md bg-zinc-600 hover:bg-zinc-500">
                                                 Edit

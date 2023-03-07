@@ -126,7 +126,6 @@ export default function EventsPage({ apiUrl }: EventProps) {
                             ) : (<></>)}
                         </div>
                     ))}
-                    <ReactPaginate pageCount={totalCount / resultCount} onPageChange={getEventsPaged} />
                 </>
             </CardList>
         </>
